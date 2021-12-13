@@ -355,10 +355,25 @@ public class ExampleSingleton { // lazy construction
     \end{lstlisting}
     \subsection*{Composite Pattern}
     Intent: To compose individual objects to build up a tree structure (a folder can contains files and other folders). The individual objects and the composed objects are treated uniformly (files and folders both have a name)
+
+    Example: You have a hierarchical structure of directories and contents, and uniform behavior in that these things have a size. The composite design addresses representing hierarchies of things in a uniform way.
+
     \includegraphics[width=10cm]{composite.png}
 
     \subsection*{Command Pattern}
     Intent: encapsulate a request as an object, so you can run, queue, log, undo/redo these requests. Also known as action/transaction. A class may want to issue a request without knowing anything about the operation being requested or the receiver object for the request
+
+    \subsection*{Facade pattern}
+    Example:
+    You have the functionality of a college math calculator, but need to be an interface a normal kid could use. So, you are providing a new, simplified interface over a more complex system, so the facade design pattern is appropriate here.
+
+    \subsection*{Observer pattern}
+    Example:
+    You have cells that need to be recalculated when other cells change. A cell can be notified it needs recalculation using the observer design pattern. A cell can be considered an observer of the other cells it may depend on.
+    
+    \begin{center}
+        \includegraphics[width=8cm]{observer.png}
+    \end{center}
 
     \vfill\null
     \columnbreak
@@ -607,6 +622,8 @@ public class PopMachine {
     \newpage
     \subsection*{Decorator pattern}
     Intent: attach additional responsibilities to an object dynamically. It is usually used for making user interface embellishments such as adding decorations like a menu bar, vertical scrollbar, or horizontal scrollbar to a basic window. It's used when you don't want too many new subclasses. You use aggregation instead of inheritance
+
+    Example: You have different combinations of file filters (compression, encryption) that need to be assembled to handle the input file appropriate. The decorator pattern supports constructing these combinations and processing the input, where each decorator is a particular type of file filter.
 
     \includegraphics[width=6cm]{decorator.png}
 
