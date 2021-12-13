@@ -35,8 +35,8 @@
 
 \geometry{top=1cm, left=1cm, right=1cm, bottom=1cm}
 \setlength{\headheight}{20pt}
-\setlength{\parskip}{0.3cm}
-\setlength{\parindent}{1cm}
+\setlength{\parskip}{0.15cm}
+\setlength{\parindent}{0cm}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -60,11 +60,214 @@
 }
 
 \begin{document}
+\begin{multicols*}{2}
+\footnotesize
+\subsection*{Objects, UML, and Java}
+\textbf{Abstraction:} Simplifying to its essentials the description of a real-world entity or concept.
+
+\textbf{Encapsulation:} Building data with access functions distinguishing ``what'' from ``how.''
+
+\textbf{Decomposition:} Dividing whole things into parts or composing whole things out of parts.
+
+\textbf{Generalization:} From specific cases, looking for commonalities that can be factored out.
+
+\textbf{Abstract Class v.s. Interface:} An abstract class may provide a partial implementation. A class may implement any number of interfaces, but only extend one superclass. Adding a method to an interface will ``break'' any class that  previously implemented it.
+
+\textbf{Java Subtleties}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+// Constructor super call
+public class Base {
+    protected int value;
+    public Base( int initValue ) {
+        // implicitly inserted call to super()
+        value = initValue;
+    }
+}
+public class Derived extends Base {
+    public Derived( int initValue ) {
+        super( initValue );
+        // explicit call to super();
+        // super() if used, must come first
+    }
+}
+
+// Shadowing data
+public class Base {
+    protected int value; // 2, 3
+}
+public class Derived extends Base {
+    private int value; // 0, 1
+    public void test() {
+        value = 0;
+        this.value = 1;
+        super.value = 2;
+        ((Base)this).value = 3;
+    }
+} 
+
+// Overriding is not Shadowing
+public class Base {
+    public int i = 1;
+    public int f() { return i; }
+}
+public class Derived extends Base {
+    public int i = 2; // shadowing
+    public int f() { return -i; } // overriding
+}
+public class Test {
+    public static void main( String args[] ) {
+        Derived d = new Derived();
+        // d.i is 2, d.f() returns -2
+        Base b = (Base)d;
+        // b.i is 1, b.f() returns -2, "dynamic binding"
+    }
+}
+\end{lstlisting}
+
+\textbf{CRC Cards}
+Class-Responsibility-Collaborator: Explore classes, their responsibilities, and their interactions.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{CRC.png}
+\end{figure}
+
+\subsection*{Software Process}
+
+\textbf{Waterfall:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.23\textwidth]{Waterfall.png}
+\end{figure}
+\begin{itemize}
+    \item Pros: easily understood, enforces discipline, verification at every phase, documentation
+    \item Cons: uses a manufacturing view of software, customer must be patient, customer sees the system only at the end, dependence on requirements being ``right,'' requirements must all be known up front
+\end{itemize}
+
+\textbf{Prototyping:} Making sure you develop the right system. Iterative design: cycling through several designs, improving the product with each pass. Various approaches: throwaway, incremental, evolutionary.
+\begin{itemize}
+    \item Throwaway: Build and test prototype, gain knowledge for the real product, ``throw away'' the prototype, then develop the ``product'' for real.
+    \begin{itemize}
+        \item Pros: more communication between users and developers, functionality introduced earlier which is good for morale
+        \item Cons: building the prototype must be rapid, some qualities may be sacrificed, temptation to use the throwaway prototype in the final product
+    \end{itemize}
+    \item Incremental: Triage system into separate increments (i.e. ``must do'', ``should do'', ``could do''), develop and add one increment at a time.
+    \item Evolutionary: feature is refined or ``evolved'' over time
+    \item Other: user interface sketches, storyboards
+\end{itemize}
+
+\textbf{Staged delivery:} Developers deliver the system  in a series of working releases or builds. Users use some functionality while the rest continues to be developed. 
+\begin{itemize}
+    \item Pros: provides more options, different builds focus on specific features, reduces estimation errors, risks are reduced earlier.
+    \item Cons: Overhead needed to plan and drive the product toward staged releases, extra complexity of supporting multiple versions in the field.
+\end{itemize}
+
+\textbf{Agile Practices:} trust motivated individuals, face-to-face conversation, best work emerges from self-organizing teams, team reflects on and adjusts their behavior, promote constant, sustainable pace. ``Working software'' is the main measure of progress. Continuous, frequent delivery of value. Customers and developers work together, satisfy customer early. Welcome changing requirements.
+\begin{itemize}
+    \item eXtreme Programming (XP): Communication, feedback, simplicity, programmer friendly (40h work week), code-centric, for small teams (up to about 20), and requires courage. 12 practices: 40 hour week, metaphor, simple design, collective ownership, coding standards, small releases, continuous integration, refactoring, planning game, testing, on-site customer, and pair programming.
+    \item Scrum: Agile process, doesn't prescribe many development methods. Based around feedback, roles, meetings, prioritization, and planning. Scrum Master protects the team and helps the team follow scrum. Product owner represents the customer. Scrum meetings:
+    \begin{itemize}
+        \item Planning Meeting (take requirements and user stories. Choose appropriate stories to work on next, estimate their cost in time, prioritize them, and fit them into the time left for the iteration)
+        \item Daily Scrum (time limited, every team member answers: what did they do, what are they going to do, and what they are blocked by.)
+        \item Retrospective (review issues faced with quality and personnel, try to improve the process)
+        \item Review (review work completed and not completed, demonstrate current system)
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Requirements}
+
+Types:
+\begin{itemize}
+    \item User requirements (what tasks the user can do with the system)
+    \item Functional requirements (features: what behaviors the system does or supports)
+    \item Non-functional requirements (qualities: how well the system should do what it does, e.g., response time, resources usage)
+\end{itemize}
+
+SMART Work Items: Specific, Measurable, Achievable, Relevant, Time Boxed. INVEST in Good Stories: Independent, Negotiable, Valuable, Estimable, Small, Testable.
+
+\subsection*{Testing}
+
+Examples of Defects:
+\begin{itemize}
+    \item Algorithmic: code logic does not produce the proper output
+    \item Overload: data structure unexpectedly filled to capacity
+    \item Performance: violates service level agreement
+    \item Accuracy: calculated result not to the desired level of accuracy
+    \item Timing: race condition in coordinating concurrent processes
+\end{itemize}
+
+\textbf{Regression Testing:} Avoid breaking things that should work. Do regression test after a change or fix to check whether previously passing tests now fail.
+
+\textbf{Black Box Testing:} Be systematic about what to test not knowing the internal code. Determine equivalence classes: each test inside an equivalence class checks the ``same thing''. 
+
+\textbf{Testing Strategies:}
+\begin{itemize}
+    \item Big-bang strategy: test thoroughly only after the whole system is put together. Pro: project almost finished, only testing left. Con: hard to pinpoint cause of failure.
+    \item Top-down incremental strategy: implement/test the highest-level modules first. Use stubs for lower-level functionality, higher-level modules are the test drivers.
+    \item Bottom-up incremental strategy: implement/test the lowest-level modules first, need to write test drivers.
+\end{itemize}
+
+\textbf{Automated Testing:} Write software to help test software. Essential to test-driven development and refactoring.
+
+\textbf{Test Driven Development:} Write tests first.
+
+\textbf{JUnit Framework:}
+Example test code:
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+public class NumberTest extends TestCase {
+    private Number aNumber;
+    private Number anotherNumber;
+    
+    protected void setUp() {
+        aNumber = new Number(2);
+        anotherNumber = new Number(3);
+    }
+    // check that value-based equality works
+    public void testEquals() {
+        Assert.assertTrue(!aNumber.equals(null));
+        Assert.assertEquals(aNumber, aNumber);
+        Assert.assertEquals(aNumber, new Number(2));
+        Assert.assertTrue(!aNumber.equals(anotherNumber));
+    }
+}
+\end{lstlisting}
+\begin{itemize}
+    \item \lstinline{setUp()} method to initialize the test objects (or fixture) before each test method is run.
+    \item \lstinline{tearDown()} method to clean up the fixture afterwards
+\end{itemize}
+
+\subsection*{Refactoring}
+
+Change software system so that external behavior does not change but internal structure is improved. Do this in small steps (change a bit and re-test). When adding a feature, refactor to make the addition easier to achieve. 
+
+\textbf{Code Smells:}
+\begin{itemize}
+    \item Duplicated Code: Extract Method, Pull Up Method
+    \item Long Method (long, difficult-to-understand methods): Extract Method
+    \item Large Class (Blob or God Class trying to do too many things): Extract Class
+    \item Divergent Change (a class is commonly changed in different ways for different reasons): Extract Class
+    \item Shotgun Surgery (making a change requires many little changes across many different classes or methods): Move Method
+    \item Long Parameter List: Replace parameter with method, introduce parameter object
+    \item Feature Envy (method seems more interested in details of a class other than the one it is in): Move Method, Extract Method 
+    \item Data Class (class that is just data): Encapsulate Field, Extract Method, Move Method 
+    \item Data Clumps (groups of data appearing together in the instance variables of classes, parameters to methods, etc.): Extract Class, Introduce Parameter Object 
+    \item Primitive Obsession (using the built-in types too much): Replace Data Value with Object
+    \item Switch Statements (long conditionals on type codes defined in other classes): Extract/Move Method, Replace Type Code, Replace Conditional with Polymorphism
+    \item Speculative Generality (``we might need this someday''): Collapse Hierarchy, Remove Parameter
+    \item Message Chains (long chains of navigation to get to an object): Hide Delegate
+    \item Inappropriate Intimacy (two classes that depend too much on each other, with lots of bidirectional communication): Move Method, Extract Class 
+    \item Refused Bequest (subclass inherits something that is not needed): Push Down Method and Push Down Field, Replace Inheritance with Delegation
+\end{itemize}
+
+\normalsize
+\end{multicols*}
+
+\newpage
+
 \begin{multicols*}{3}
 \textbf{UML Class Diagrams}
 
-    \begin {tikzpicture}
-    \begin {class}[text width=5cm]{Classname}{0,0}
+\begin{tikzpicture}
+    \begin{class}[text width=5cm]{Classname}{0,0}
     \attribute{+ attribute : type}
     \operation{+ publicMethod() : type}
     % virtual operation
@@ -72,7 +275,7 @@
     \operation{\# protectedMethod() : type}
     \end{class}
 \end {tikzpicture} \\
-\textbf{Association}: Used when two models need to communicate between eachother.
+\textbf{Association}: Used when two models need to communicate between each other.
 \begin{center}
     \includegraphics[width=4cm]{uni.png}
 \end{center}
@@ -95,7 +298,7 @@ If person is deleted then head is also deleted as a result
     \includegraphics[width=4cm]{Generalization.png}
 \end{center}
 
-\textbf{Realization/Implementation}: A class implements implements the behavior that the interface specifies
+\textbf{Realization/Implementation}: A class implements the behavior that the interface specifies
 \begin{center}
     \includegraphics[width=4cm]{interface.png}
 \end{center}
@@ -193,21 +396,21 @@ public abstract class HotCaffeineBeverage {
 // subclasses inherit
 // makeRecipe, boilWater, pourInCup
 public class Coffee extends HotCaffeineBeverage {
-        public void brew() {
+    public void brew() {
         System.out.println( "Brewing the coffee" );
-        }
-        public void addCondiments() {
+    }
+    public void addCondiments() {
         System.out.println( "Adding sugar, milk" );
-        }
+    }
 }
 public class Tea extends HotCaffeineBeverage {
-        public void brew() {
+    public void brew() {
         System.out.println( "Steeping the tea" );
         System.out.println( "Removing the tea" );
-        }
-        public void addCondiments() {
+    }
+    public void addCondiments() {
         System.out.println( "Adding lemon" );
-        }
+    }
 }
                 
     \end{lstlisting}
